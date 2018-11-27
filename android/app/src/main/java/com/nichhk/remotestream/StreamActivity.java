@@ -46,12 +46,10 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
     private static final String TAG = "StreamActivity";
 
     private static final String BEGIN_MSG = "Pull the trigger when you're ready";
-    private float[] mEulerAngles = new float[3];
-    private float[] mInitEulerAngles = new float[3];
-
     private final double PRECISION = Math.PI / 450.0;
     private final double RANGE = Math.PI / 2.0;
-
+    private float[] mEulerAngles = new float[3];
+    private float[] mInitEulerAngles = new float[3];
     private Vibrator mVibrator;
 
     private CardboardOverlayView mOverlayView;
@@ -97,14 +95,15 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
         mQueue.addRequest(0f, 0f);
     }
 
-    private void startPlayer(){
-        String URL = baseUrl + ":5000/stream/video.mjpeg";
+    private void startPlayer() {
+        String URL = baseUrl + ":8080/stream/video.mjpeg";
         mp = new MjpegPlayer(mOverlayView);
         (new DoRead()).execute(URL);
     }
 
     @Override
-    public void onRendererShutdown(){Log.i(TAG, "onRendererShutdown");
+    public void onRendererShutdown() {
+        Log.i(TAG, "onRendererShutdown");
     }
 
     @Override
@@ -189,7 +188,7 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
         }
 
         protected void onPostExecute(MjpegInputStream result) {
-            if (result == null){
+            if (result == null) {
                 throw new RuntimeException("stream is null!!!");
             }
             mp.setSource(result);

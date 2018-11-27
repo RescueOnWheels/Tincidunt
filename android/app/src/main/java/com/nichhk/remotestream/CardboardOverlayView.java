@@ -58,12 +58,12 @@ public class CardboardOverlayView extends LinearLayout {
     }
 
     public void show3DToast(String message) {
-        setText(message);
+        //setText(message);
         setTextAlpha(1f);
 
     }
 
-    public void fade3DToast(){
+    public void fade3DToast() {
         mTextFadeAnimation.setAnimationListener(new EndAnimationListener() {
             @Override
             public void onAnimationEnd(Animation animation) {
@@ -71,11 +71,6 @@ public class CardboardOverlayView extends LinearLayout {
             }
         });
         startAnimation(mTextFadeAnimation);
-    }
-
-    private abstract class EndAnimationListener implements Animation.AnimationListener {
-        @Override public void onAnimationRepeat(Animation animation) {}
-        @Override public void onAnimationStart(Animation animation) {}
     }
 
     private void setDepthOffset(float offset) {
@@ -98,21 +93,31 @@ public class CardboardOverlayView extends LinearLayout {
         mRightView.setColor(color);
     }
 
-    public SurfaceView[] getSurfaceViews(){
+    public SurfaceView[] getSurfaceViews() {
         return new SurfaceView[]{mLeftView.getSurfaceView(), mRightView.getSurfaceView()};
 
     }
 
-    public void setCallback(SurfaceHolder.Callback cb){
+    public void setCallback(SurfaceHolder.Callback cb) {
         mLeftView.imageView.getHolder().addCallback(cb);
         mRightView.imageView.getHolder().addCallback(cb);
 
     }
 
+    private abstract class EndAnimationListener implements Animation.AnimationListener {
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+        }
+
+        @Override
+        public void onAnimationStart(Animation animation) {
+        }
+    }
+
     /**
      * A simple view group containing some horizontally centered text underneath a horizontally
      * centered image.
-     *
+     * <p>
      * This is a helper class for CardboardOverlayView.
      */
     private class CardboardOverlayEyeView extends ViewGroup {
@@ -184,7 +189,7 @@ public class CardboardOverlayView extends LinearLayout {
                     (int) (leftMargin + width), (int) (topMargin + height * (1.0f - verticalTextPos)));
         }
 
-        public SurfaceView getSurfaceView(){
+        public SurfaceView getSurfaceView() {
             return imageView;
         }
     }

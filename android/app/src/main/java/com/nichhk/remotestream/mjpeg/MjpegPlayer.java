@@ -14,11 +14,11 @@ import com.nichhk.remotestream.mjpeg.MjpegInputStream;
 
 import java.io.IOException;
 
-public class MjpegPlayer implements SurfaceHolder.Callback{
+public class MjpegPlayer implements SurfaceHolder.Callback {
 
 
-    public final static int SIZE_STANDARD   = 1;
-    public final static int SIZE_BEST_FIT   = 4;
+    public final static int SIZE_STANDARD = 1;
+    public final static int SIZE_BEST_FIT = 4;
 
     private MjpegViewThread thread;
     private MjpegInputStream mIn = null;
@@ -27,13 +27,17 @@ public class MjpegPlayer implements SurfaceHolder.Callback{
 
     private boolean surface1Done, surface2Done;
 
+    public MjpegPlayer(CardboardOverlayView cov) {
+        init(cov.getSurfaceViews());
+        cov.setCallback(this);
+    }
+
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         Log.i("TAG", "a surface was created!");
-        if (surface1Done){
+        if (surface1Done) {
             surface2Done = true;
-        }
-        else{
+        } else {
             surface1Done = true;
         }
     }
@@ -48,10 +52,44 @@ public class MjpegPlayer implements SurfaceHolder.Callback{
 
     }
 
+    private void init(SurfaceView... holders) {
+        thread = new MjpegViewThread(holders);
+        overlayPaint = new Paint();
+        overlayPaint.setTextAlign(Paint.Align.LEFT);
+        overlayPaint.setTextSize(12);
+        overlayPaint.setTypeface(Typeface.DEFAULT);
+    }
+
+    public void startPlayback() {
+        if (mIn != null) {
+            mRun = true;
+            thread.start();
+        }
+    }
+
+    public void stopPlayback() {
+        mRun = false;
+        boolean retry = true;
+        while (retry) {
+            try {
+                thread.join();
+                retry = false;
+            } catch (InterruptedException e) {
+            }
+        }
+    }
+
+    public void setSource(MjpegInputStream source) {
+        mIn = source;
+        startPlayback();
+    }
+
     public class MjpegViewThread extends Thread {
         private SurfaceView[] surfaces;
 
-        public MjpegViewThread(SurfaceView ... surfaces) { this.surfaces = surfaces; }
+        public MjpegViewThread(SurfaceView... surfaces) {
+            this.surfaces = surfaces;
+        }
 
         public void run() {
 
@@ -78,43 +116,5 @@ public class MjpegPlayer implements SurfaceHolder.Callback{
                 }
             }
         }
-    }
-
-    private void init(SurfaceView ... holders) {
-        thread = new MjpegViewThread(holders);
-        overlayPaint = new Paint();
-        overlayPaint.setTextAlign(Paint.Align.LEFT);
-        overlayPaint.setTextSize(12);
-        overlayPaint.setTypeface(Typeface.DEFAULT);
-    }
-
-    public void startPlayback() {
-        if(mIn != null) {
-            mRun = true;
-            thread.start();
-        }
-    }
-
-    public void stopPlayback() {
-        mRun = false;
-        boolean retry = true;
-        while(retry) {
-            try {
-                thread.join();
-                retry = false;
-            } catch (InterruptedException e) {}
-        }
-    }
-
-
-    public MjpegPlayer(CardboardOverlayView cov) {
-        init(cov.getSurfaceViews());
-        cov.setCallback(this);
-    }
-
-
-    public void setSource(MjpegInputStream source) {
-        mIn = source;
-        startPlayback();
     }
 }

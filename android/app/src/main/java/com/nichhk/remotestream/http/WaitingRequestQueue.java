@@ -15,14 +15,14 @@ import java.util.Map;
 
 /**
  * Created by nich on 1/12/16.
- *
+ * <p>
  * This is a wrapper for a RequestQueue.
- *
+ * <p>
  * It specifically sends the pitch and yaw values to a specified URL.
  * This RequestQueue ensures that there is only one pending request at any time. If there is
  * currently a pending request, it ignores all incoming requests.
  */
-public class WaitingRequestQueue  {
+public class WaitingRequestQueue {
     private static final String TAG = WaitingRequestQueue.class.getSimpleName();
     private RequestQueue mQueue;
 
@@ -34,7 +34,7 @@ public class WaitingRequestQueue  {
 
     private boolean stopped = false;
 
-    public WaitingRequestQueue(Context context, String baseUrl){
+    public WaitingRequestQueue(Context context, String baseUrl) {
         mQueue = Volley.newRequestQueue(context);
         mQueue.addRequestFinishedListener(new RequestQueue.RequestFinishedListener<String>() {
             @Override
@@ -47,12 +47,12 @@ public class WaitingRequestQueue  {
         this.baseUrl = baseUrl;
     }
 
-    public void addRequest(final float pitch, final float yaw){
+    public void addRequest(final float pitch, final float yaw) {
         addRequest(pitch, yaw, false);
     }
 
-    private void addRequest(final float pitch, final float yaw, boolean priority){
-        if (priority || (ready && !stopped)){
+    private void addRequest(final float pitch, final float yaw, boolean priority) {
+        if (priority || (ready && !stopped)) {
             StringRequest req = new StringRequest(Request.Method.GET, buildUrl(pitch, yaw),
                     new Response.Listener<String>() {
                         @Override
@@ -64,9 +64,9 @@ public class WaitingRequestQueue  {
                 public void onErrorResponse(VolleyError error) {
                     Log.e(TAG, "That didn't work!");
                 }
-            }){
+            }) {
                 @Override
-                public Map<String, String> getParams(){
+                public Map<String, String> getParams() {
                     params.put("pitch", "" + pitch);
                     params.put("yaw", "" + yaw);
                     return params;
@@ -76,11 +76,12 @@ public class WaitingRequestQueue  {
             ready = false;
         }
     }
-    private String buildUrl(float pitch, float yaw){
+
+    private String buildUrl(float pitch, float yaw) {
         return baseUrl + "/" + pitch + "/" + yaw;
     }
 
-    public void stopAndRecenter(){
+    public void stopAndRecenter() {
         mQueue.cancelAll(new RequestQueue.RequestFilter() {
             @Override
             public boolean apply(Request<?> request) {
@@ -91,7 +92,7 @@ public class WaitingRequestQueue  {
         stopped = true;
     }
 
-    public void start(){
+    public void start() {
         stopped = false;
         ready = true;
     }

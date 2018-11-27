@@ -13,12 +13,16 @@ import java.net.URL;
 import java.util.Properties;
 
 public class MjpegInputStream extends DataInputStream {
-    private final byte[] SOI_MARKER = { (byte) 0xFF, (byte) 0xD8 };
-    private final byte[] EOF_MARKER = { (byte) 0xFF, (byte) 0xD9 };
-    private final String CONTENT_LENGTH = "Content-Length";
     private final static int HEADER_MAX_LENGTH = 100;
     private final static int FRAME_MAX_LENGTH = 40000 + HEADER_MAX_LENGTH;
+    private final byte[] SOI_MARKER = {(byte) 0xFF, (byte) 0xD8};
+    private final byte[] EOF_MARKER = {(byte) 0xFF, (byte) 0xD9};
+    private final String CONTENT_LENGTH = "Content-Length";
     private int mContentLength = -1;
+
+    public MjpegInputStream(InputStream in) {
+        super(new BufferedInputStream(in, FRAME_MAX_LENGTH));
+    }
 
     public static MjpegInputStream read(String urlString) {
         HttpURLConnection conn;
@@ -34,16 +38,14 @@ public class MjpegInputStream extends DataInputStream {
         return null;
     }
 
-    public MjpegInputStream(InputStream in) { super(new BufferedInputStream(in, FRAME_MAX_LENGTH)); }
-
     private int getEndOfSeqeunce(DataInputStream in, byte[] sequence) throws IOException {
         int seqIndex = 0;
         byte c;
-        for(int i=0; i < FRAME_MAX_LENGTH; i++) {
+        for (int i = 0; i < FRAME_MAX_LENGTH; i++) {
             c = (byte) in.readUnsignedByte();
-            if(c == sequence[seqIndex]) {
+            if (c == sequence[seqIndex]) {
                 seqIndex++;
-                if(seqIndex == sequence.length) return i + 1;
+                if (seqIndex == sequence.length) return i + 1;
             } else seqIndex = 0;
         }
         return -1;

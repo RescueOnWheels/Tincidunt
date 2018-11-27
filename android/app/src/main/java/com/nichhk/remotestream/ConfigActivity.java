@@ -16,7 +16,7 @@ import com.sveder.remotestream.R;
 public class ConfigActivity extends Activity {
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.config);
 

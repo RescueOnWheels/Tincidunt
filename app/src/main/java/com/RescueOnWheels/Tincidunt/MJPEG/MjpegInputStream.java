@@ -39,13 +39,20 @@ public class MjpegInputStream extends DataInputStream {
     private int getEndOfSequence(DataInputStream in, byte[] sequence) throws IOException {
         int seqIndex = 0;
         byte c;
+
         for (int i = 0; i < FRAME_MAX_LENGTH; i++) {
             c = (byte) in.readUnsignedByte();
-            if (c == sequence[seqIndex]) {
-                seqIndex++;
-                if (seqIndex == sequence.length) return i + 1;
-            } else seqIndex = 0;
+            if (c != sequence[seqIndex]) {
+                seqIndex = 0;
+                continue;
+            }
+
+            seqIndex++;
+            if (seqIndex == sequence.length) {
+                return i + 1;
+            }
         }
+
         return -1;
     }
 

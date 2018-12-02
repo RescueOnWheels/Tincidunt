@@ -107,8 +107,16 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
     @Override
     public void onNewFrame(HeadTransform headTransform) {
         headTransform.getEulerAngles(mEulerAngles, 0);
-        if (i % 100 == 0) {
-            Log.i(TAG, mEulerAngles[0] + " " + mEulerAngles[1] + " " + mEulerAngles[2]);
+
+        if (i % 10 == 0) {
+            int x = (int)Math.round(mEulerAngles[0] / (Math.PI / 2) * 100);
+                x = Math.min(x, 100);
+                x = Math.max(x, -100);
+            int y = (int)Math.round(-mEulerAngles[1] / (Math.PI / 2) * 100);
+                y = Math.min(y, 100);
+                y = Math.max(y, -100);
+
+            Log.i(TAG, "Axis: " + x + " " + y);
         }
         i++;
         if (tracking) {

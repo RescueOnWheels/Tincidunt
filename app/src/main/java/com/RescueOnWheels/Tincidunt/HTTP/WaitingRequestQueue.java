@@ -58,8 +58,8 @@ public class WaitingRequestQueue {
             }) {
                 @Override
                 public Map<String, String> getParams() {
-                    params.put("pitch", "" + pitch);
-                    params.put("yaw", "" + yaw);
+                    params.put("pitch", Float.toString(pitch));
+                    params.put("yaw", Float.toString(yaw));
                     return params;
                 }
             };

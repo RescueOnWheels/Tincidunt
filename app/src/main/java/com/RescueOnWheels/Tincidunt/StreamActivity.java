@@ -43,9 +43,6 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
 
     private boolean tracking = false;
 
-    public StreamActivity() {
-    }
-
     /**
      * Sets the view to our CardboardView and initializes the transformation matrices we will use
      * to render our scene.
@@ -133,18 +130,14 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
         }
     }
 
-    /**
-     * Draws a frame for an eye. The transformation for that eye (from the camera) is passed in as
-     * a parameter.
-     *
-     * @param transform The transformations to apply to render this eye.
-     */
     @Override
     public void onDrawEye(EyeTransform transform) {
+        // No need to implement this function.
     }
 
     @Override
     public void onFinishFrame(Viewport viewport) {
+        // No need to implement this function.
     }
 
     @Override

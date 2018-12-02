@@ -14,13 +14,13 @@ import com.RescueOnWheels.Tincidunt.CardboardOverlayView;
 import java.io.IOException;
 
 public class MjpegPlayer implements SurfaceHolder.Callback {
-
-
     private MjpegViewThread thread;
-    private MjpegInputStream mIn = null;
-    private boolean mRun = false;
 
-    private boolean surface1Done, surface2Done;
+    private MjpegInputStream mIn = null;
+
+    private boolean mRun = false;
+    private boolean surface1Done;
+    private boolean surface2Done;
 
     public MjpegPlayer(CardboardOverlayView cov) {
         init(cov.getSurfaceViews());
@@ -39,12 +39,12 @@ public class MjpegPlayer implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
+        // No need to implement this function.
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-
+        // No need to implement this function.
     }
 
     private void init(SurfaceView... holders) {
@@ -74,6 +74,7 @@ public class MjpegPlayer implements SurfaceHolder.Callback {
             this.surfaces = surfaces;
         }
 
+        @Override
         public void run() {
 
             final Paint p = new Paint();
@@ -94,8 +95,6 @@ public class MjpegPlayer implements SurfaceHolder.Callback {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
-
                 }
             }
         }

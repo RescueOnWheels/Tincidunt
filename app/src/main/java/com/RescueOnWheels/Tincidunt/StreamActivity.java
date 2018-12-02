@@ -15,7 +15,6 @@ import com.google.vrtoolkit.cardboard.CardboardView;
 import com.google.vrtoolkit.cardboard.EyeTransform;
 import com.google.vrtoolkit.cardboard.HeadTransform;
 import com.google.vrtoolkit.cardboard.Viewport;
-import com.sveder.remotestream.R;
 
 import java.util.Objects;
 
@@ -28,7 +27,6 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
 
     private static final String TAG = "StreamActivity";
 
-    private static final String BEGIN_MSG = "Pull the trigger when you're ready";
     private float[] mEulerAngles = new float[3];
     private float[] mInitEulerAngles = new float[3];
 

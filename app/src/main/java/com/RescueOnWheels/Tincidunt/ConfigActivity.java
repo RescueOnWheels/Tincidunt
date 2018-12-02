@@ -8,8 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.sveder.remotestream.R;
-
 public class ConfigActivity extends Activity {
 
     @Override

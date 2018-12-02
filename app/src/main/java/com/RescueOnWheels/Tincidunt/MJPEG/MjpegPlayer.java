@@ -67,8 +67,8 @@ public class MjpegPlayer implements SurfaceHolder.Callback {
         startPlayback();
     }
 
-    public class MjpegViewThread extends Thread {
-        private SurfaceView[] surfaces;
+    class MjpegViewThread extends Thread {
+        private final SurfaceView[] surfaces;
 
         MjpegViewThread(SurfaceView... surfaces) {
             this.surfaces = surfaces;

@@ -13,18 +13,9 @@ import com.android.volley.toolbox.Volley;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by nich on 1/12/16.
- * <p>
- * This is a wrapper for a RequestQueue.
- * <p>
- * It specifically sends the pitch and yaw values to a specified URL.
- * This RequestQueue ensures that there is only one pending request at any time. If there is
- * currently a pending request, it ignores all incoming requests.
- */
 public class WaitingRequestQueue {
     private static final String TAG = WaitingRequestQueue.class.getSimpleName();
-    private RequestQueue mQueue;
+    private final RequestQueue mQueue;
 
     private boolean ready = true;
 

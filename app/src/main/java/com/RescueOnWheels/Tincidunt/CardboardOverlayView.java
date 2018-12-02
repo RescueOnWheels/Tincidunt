@@ -18,7 +18,7 @@ import android.widget.TextView;
 public class CardboardOverlayView extends LinearLayout {
     private final CardboardOverlayEyeView mLeftView;
     private final CardboardOverlayEyeView mRightView;
-    private AlphaAnimation mTextFadeAnimation;
+    private final AlphaAnimation mTextFadeAnimation;
 
     public CardboardOverlayView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -119,15 +119,15 @@ public class CardboardOverlayView extends LinearLayout {
             addView(textView);
         }
 
-        public void setColor(int color) {
+        void setColor(int color) {
             textView.setTextColor(color);
         }
 
-        public void setTextViewAlpha(float alpha) {
+        void setTextViewAlpha(float alpha) {
             textView.setAlpha(alpha);
         }
 
-        public void setOffset(float offset) {
+        void setOffset(float offset) {
             this.offset = offset;
         }
 
@@ -166,7 +166,7 @@ public class CardboardOverlayView extends LinearLayout {
                     (int) (leftMargin + width), (int) (topMargin + height * (1.0f - verticalTextPos)));
         }
 
-        public SurfaceView getSurfaceView() {
+        SurfaceView getSurfaceView() {
             return imageView;
         }
     }

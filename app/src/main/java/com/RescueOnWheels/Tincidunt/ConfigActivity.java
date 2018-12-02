@@ -15,8 +15,8 @@ public class ConfigActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.config);
 
-        Button button = (Button) findViewById(R.id.button);
-        final EditText ipText = (EditText) findViewById(R.id.editText);
+        Button button = findViewById(R.id.button);
+        final EditText ipText = findViewById(R.id.editText);
         final Context me = this;
         button.setOnClickListener(new View.OnClickListener() {
             @Override

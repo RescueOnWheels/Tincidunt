@@ -18,7 +18,7 @@ public class MjpegInputStream extends DataInputStream {
     private final byte[] SOI_MARKER = {(byte) 0xFF, (byte) 0xD8};
     private final byte[] EOF_MARKER = {(byte) 0xFF, (byte) 0xD9};
 
-    public MjpegInputStream(InputStream in) {
+    private MjpegInputStream(InputStream in) {
         super(new BufferedInputStream(in, FRAME_MAX_LENGTH));
     }
 

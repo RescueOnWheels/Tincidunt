@@ -27,12 +27,12 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
 
     private static final String TAG = "StreamActivity";
 
-    private float[] mEulerAngles = new float[3];
+    private final float[] mEulerAngles = new float[3];
     private float[] mInitEulerAngles = new float[3];
 
     private CardboardOverlayView mOverlayView;
 
-    private MjpegPlayer mp;
+    private static MjpegPlayer mp;
 
     private int i = 0;
 
@@ -56,14 +56,14 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.common_ui);
-        CardboardView cardboardView = (CardboardView) findViewById(R.id.cardboard_view);
+        CardboardView cardboardView = findViewById(R.id.cardboard_view);
         cardboardView.setRenderer(this);
         setCardboardView(cardboardView);
         cardboardView.setOnTouchListener(this);
 
         Intent i = getIntent();
         baseUrl += Objects.requireNonNull(i.getExtras()).get("ip");
-        mOverlayView = (CardboardOverlayView) findViewById(R.id.overlay);
+        mOverlayView = findViewById(R.id.overlay);
         mOverlayView.show3DToast();
         startPlayer();
 
@@ -108,21 +108,23 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
     public void onNewFrame(HeadTransform headTransform) {
         headTransform.getEulerAngles(mEulerAngles, 0);
 
-        if (i % 10 == 0) {
-            int x = (int)Math.round(mEulerAngles[0] / (Math.PI / 2) * 100);
-                x = Math.min(x, 100);
-                x = Math.max(x, -100);
-            int y = (int)Math.round(-mEulerAngles[1] / (Math.PI / 2) * 100);
-                y = Math.min(y, 100);
-                y = Math.max(y, -100);
+        int x = (int)Math.round(mEulerAngles[0] / (Math.PI / 2) * 100);
+        x = Math.min(x, 100);
+        x = Math.max(x, -100);
+        int y = (int)Math.round(-mEulerAngles[1] / (Math.PI / 2) * 100);
+        y = Math.min(y, 100);
+        y = Math.max(y, -100);
 
+        if (i % 10 == 0) {
             Log.i(TAG, "Axis: " + x + " " + y);
         }
-        i++;
+
         if (tracking) {
             shift();
-            mQueue.addRequest(mEulerAngles[0], mEulerAngles[1]);
+            mQueue.addRequest(x, y);
         }
+
+        i++;
     }
 
     private void shift() {
@@ -164,7 +166,7 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
         return true;
     }
 
-    class DoRead extends AsyncTask<String, Void, MjpegInputStream> {
+    static class DoRead extends AsyncTask<String, Void, MjpegInputStream> {
 
         @Override
         protected MjpegInputStream doInBackground(String... params) {

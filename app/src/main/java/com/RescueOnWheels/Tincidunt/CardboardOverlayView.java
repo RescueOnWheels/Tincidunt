@@ -15,11 +15,7 @@ import android.view.animation.Animation;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-/**
- * Contains two sub-views to provide a simple stereo HUD.
- */
 public class CardboardOverlayView extends LinearLayout {
-    private static final String TAG = CardboardOverlayView.class.getSimpleName();
     private final CardboardOverlayEyeView mLeftView;
     private final CardboardOverlayEyeView mRightView;
     private AlphaAnimation mTextFadeAnimation;
@@ -41,7 +37,7 @@ public class CardboardOverlayView extends LinearLayout {
         addView(mRightView);
 
         // Set some reasonable defaults.
-        setDepthOffset(0.016f);
+        setDepthOffset();
         setColor(Color.rgb(150, 255, 180));
         setVisibility(View.VISIBLE);
 
@@ -49,10 +45,8 @@ public class CardboardOverlayView extends LinearLayout {
         mTextFadeAnimation.setDuration(2500);
     }
 
-    public void show3DToast(String message) {
-        //setText(message);
+    public void show3DToast() {
         setTextAlpha(1f);
-
     }
 
     public void fade3DToast() {
@@ -65,14 +59,9 @@ public class CardboardOverlayView extends LinearLayout {
         startAnimation(mTextFadeAnimation);
     }
 
-    private void setDepthOffset(float offset) {
-        mLeftView.setOffset(offset);
-        mRightView.setOffset(-offset);
-    }
-
-    private void setText(String text) {
-        mLeftView.setText(text);
-        mRightView.setText(text);
+    private void setDepthOffset() {
+        mLeftView.setOffset((float) 0.016);
+        mRightView.setOffset(-(float) 0.016);
     }
 
     private void setTextAlpha(float alpha) {
@@ -132,10 +121,6 @@ public class CardboardOverlayView extends LinearLayout {
 
         public void setColor(int color) {
             textView.setTextColor(color);
-        }
-
-        public void setText(String text) {
-            textView.setText(text);
         }
 
         public void setTextViewAlpha(float alpha) {

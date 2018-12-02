@@ -1,29 +1,9 @@
-/*
- * Copyright 2014 Google Inc. All Rights Reserved.
-
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.RescueOnWheels.Tincidunt;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.util.Log;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -37,6 +17,8 @@ import com.google.vrtoolkit.cardboard.HeadTransform;
 import com.google.vrtoolkit.cardboard.Viewport;
 import com.sveder.remotestream.R;
 
+import java.util.Objects;
+
 import javax.microedition.khronos.egl.EGLConfig;
 
 /**
@@ -47,11 +29,8 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
     private static final String TAG = "StreamActivity";
 
     private static final String BEGIN_MSG = "Pull the trigger when you're ready";
-    private final double PRECISION = Math.PI / 450.0;
-    private final double RANGE = Math.PI / 2.0;
     private float[] mEulerAngles = new float[3];
     private float[] mInitEulerAngles = new float[3];
-    private Vibrator mVibrator;
 
     private CardboardOverlayView mOverlayView;
 
@@ -84,12 +63,10 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
         setCardboardView(cardboardView);
         cardboardView.setOnTouchListener(this);
 
-        mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-
         Intent i = getIntent();
-        baseUrl += i.getExtras().get("ip");
+        baseUrl += Objects.requireNonNull(i.getExtras()).get("ip");
         mOverlayView = (CardboardOverlayView) findViewById(R.id.overlay);
-        mOverlayView.show3DToast(BEGIN_MSG);
+        mOverlayView.show3DToast();
         startPlayer();
 
         mQueue = new WaitingRequestQueue(this, baseUrl + ":8080/move");
@@ -174,7 +151,7 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
             } else {
                 Log.i(TAG, "stopping tracking");
                 tracking = false;
-                mOverlayView.show3DToast(BEGIN_MSG);
+                mOverlayView.show3DToast();
                 mQueue.stopAndRecenter();
             }
         }

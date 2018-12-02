@@ -10,9 +10,6 @@ import android.widget.EditText;
 
 import com.sveder.remotestream.R;
 
-/**
- * Created by nich on 1/23/16.
- */
 public class ConfigActivity extends Activity {
 
     @Override

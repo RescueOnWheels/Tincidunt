@@ -44,7 +44,9 @@ public class MjpegPlayer implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        // No need to implement this function.
+        synchronized (lock) {
+            mRun = false;
+        }
     }
 
     private void init(SurfaceView... holders) {
@@ -66,6 +68,8 @@ public class MjpegPlayer implements SurfaceHolder.Callback {
         mIn = source;
         startPlayback();
     }
+
+    private final static Object lock = new Object();
 
     private class MjpegViewThread extends Thread {
         private final SurfaceView[] surfaces;
@@ -89,8 +93,12 @@ public class MjpegPlayer implements SurfaceHolder.Callback {
 
                     for (final SurfaceView surfaceView : surfaces) {
                         SurfaceHolder surface = surfaceView.getHolder();
-                        synchronized (this) {
+                        synchronized (lock) {
+                            if(!mRun) continue;
+
                             Canvas canvas = surface.lockCanvas();
+                            if(canvas == null) continue;
+
                             canvas.drawColor(Color.BLACK);
                             canvas.drawBitmap(scaled, 0, 0, p);
                             surface.unlockCanvasAndPost(canvas);

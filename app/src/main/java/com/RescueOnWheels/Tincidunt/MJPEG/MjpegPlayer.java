@@ -67,7 +67,7 @@ public class MjpegPlayer implements SurfaceHolder.Callback {
         startPlayback();
     }
 
-    class MjpegViewThread extends Thread {
+    private class MjpegViewThread extends Thread {
         private final SurfaceView[] surfaces;
 
         MjpegViewThread(SurfaceView... surfaces) {
@@ -76,25 +76,28 @@ public class MjpegPlayer implements SurfaceHolder.Callback {
 
         @Override
         public void run() {
-
             final Paint p = new Paint();
+
             while (mRun) {
-                if (surface1Done && surface2Done) {
-                    try {
-                        final Bitmap bm = mIn.readMjpegFrame();
-                        Bitmap scaled = Bitmap.createScaledBitmap(bm, surfaces[0].getWidth(), surfaces[0].getHeight(), false);
-                        for (final SurfaceView surfaceView : surfaces) {
-                            SurfaceHolder surface = surfaceView.getHolder();
-                            synchronized (surface) {
-                                Canvas c = surface.lockCanvas();
-                                c.drawColor(Color.BLACK);
-                                c.drawBitmap(scaled, 0, 0, p);
-                                surface.unlockCanvasAndPost(c);
-                            }
+                if (!surface1Done || !surface2Done) {
+                    continue;
+                }
+
+                try {
+                    final Bitmap frame = mIn.readMjpegFrame();
+                    Bitmap scaled = Bitmap.createScaledBitmap(frame, surfaces[0].getWidth(), surfaces[0].getHeight(), false);
+
+                    for (final SurfaceView surfaceView : surfaces) {
+                        SurfaceHolder surface = surfaceView.getHolder();
+                        synchronized (this) {
+                            Canvas canvas = surface.lockCanvas();
+                            canvas.drawColor(Color.BLACK);
+                            canvas.drawBitmap(scaled, 0, 0, p);
+                            surface.unlockCanvasAndPost(canvas);
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         }

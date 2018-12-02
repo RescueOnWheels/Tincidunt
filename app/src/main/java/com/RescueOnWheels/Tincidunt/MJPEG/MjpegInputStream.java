@@ -1,4 +1,4 @@
-package com.nichhk.remotestream.mjpeg;
+package com.RescueOnWheels.Tincidunt.MJPEG;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

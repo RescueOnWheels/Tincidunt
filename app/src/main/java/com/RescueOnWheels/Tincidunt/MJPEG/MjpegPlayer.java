@@ -1,4 +1,4 @@
-package com.nichhk.remotestream.mjpeg;
+package com.RescueOnWheels.Tincidunt.MJPEG;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -9,8 +9,7 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.nichhk.remotestream.CardboardOverlayView;
-import com.nichhk.remotestream.mjpeg.MjpegInputStream;
+import com.RescueOnWheels.Tincidunt.CardboardOverlayView;
 
 import java.io.IOException;
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.nichhk.remotestream;
+package com.RescueOnWheels.Tincidunt;
 
 import android.content.Context;
 import android.content.Intent;
@@ -27,13 +27,14 @@ import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.RescueOnWheels.Tincidunt.HTTP.WaitingRequestQueue;
+import com.RescueOnWheels.Tincidunt.MJPEG.MjpegInputStream;
+import com.RescueOnWheels.Tincidunt.MJPEG.MjpegPlayer;
 import com.google.vrtoolkit.cardboard.CardboardActivity;
 import com.google.vrtoolkit.cardboard.CardboardView;
 import com.google.vrtoolkit.cardboard.EyeTransform;
 import com.google.vrtoolkit.cardboard.HeadTransform;
 import com.google.vrtoolkit.cardboard.Viewport;
-import com.nichhk.remotestream.http.WaitingRequestQueue;
-import com.nichhk.remotestream.mjpeg.*;
 import com.sveder.remotestream.R;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -96,7 +97,7 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
     }
 
     private void startPlayer() {
-        String URL = baseUrl + ":8080/stream/video.mjpeg";
+        String URL = baseUrl + ":8000/stream/video.mjpeg";
         mp = new MjpegPlayer(mOverlayView);
         (new DoRead()).execute(URL);
     }

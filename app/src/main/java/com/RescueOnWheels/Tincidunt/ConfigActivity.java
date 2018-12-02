@@ -1,4 +1,4 @@
-package com.nichhk.remotestream;
+package com.RescueOnWheels.Tincidunt;
 
 import android.app.Activity;
 import android.content.Context;

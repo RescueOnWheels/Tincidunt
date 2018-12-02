@@ -1,4 +1,4 @@
-package com.nichhk.remotestream.http;
+package com.RescueOnWheels.Tincidunt.HTTP;
 
 import android.content.Context;
 import android.util.Log;

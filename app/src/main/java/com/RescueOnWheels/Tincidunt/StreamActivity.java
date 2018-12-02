@@ -27,7 +27,7 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
 
     private static final String TAG = "StreamActivity";
 
-    private static MjpegPlayer player;
+    private MjpegPlayer player;
 
     private final float[] mEulerAngles = new float[3];
 
@@ -53,8 +53,8 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
         setCardboardView(cardboardView);
         cardboardView.setOnTouchListener(this);
 
-        Intent i = getIntent();
-        baseUrl += Objects.requireNonNull(i.getExtras()).get("ip");
+        Intent intent = getIntent();
+        baseUrl += Objects.requireNonNull(intent.getExtras()).get("ip");
         mOverlayView = findViewById(R.id.overlay);
         mOverlayView.show3DToast();
         startPlayer();
@@ -154,7 +154,7 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
         return true;
     }
 
-    static class DoRead extends AsyncTask<String, Void, MjpegInputStream> {
+    private class DoRead extends AsyncTask<String, Void, MjpegInputStream> {
 
         @Override
         protected MjpegInputStream doInBackground(String... params) {

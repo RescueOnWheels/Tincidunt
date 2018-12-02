@@ -16,13 +16,9 @@ import java.io.IOException;
 public class MjpegPlayer implements SurfaceHolder.Callback {
 
 
-    public final static int SIZE_STANDARD = 1;
-    public final static int SIZE_BEST_FIT = 4;
-
     private MjpegViewThread thread;
     private MjpegInputStream mIn = null;
     private boolean mRun = false;
-    private Paint overlayPaint;
 
     private boolean surface1Done, surface2Done;
 
@@ -53,28 +49,16 @@ public class MjpegPlayer implements SurfaceHolder.Callback {
 
     private void init(SurfaceView... holders) {
         thread = new MjpegViewThread(holders);
-        overlayPaint = new Paint();
+        Paint overlayPaint = new Paint();
         overlayPaint.setTextAlign(Paint.Align.LEFT);
         overlayPaint.setTextSize(12);
         overlayPaint.setTypeface(Typeface.DEFAULT);
     }
 
-    public void startPlayback() {
+    private void startPlayback() {
         if (mIn != null) {
             mRun = true;
             thread.start();
-        }
-    }
-
-    public void stopPlayback() {
-        mRun = false;
-        boolean retry = true;
-        while (retry) {
-            try {
-                thread.join();
-                retry = false;
-            } catch (InterruptedException e) {
-            }
         }
     }
 
@@ -86,7 +70,7 @@ public class MjpegPlayer implements SurfaceHolder.Callback {
     public class MjpegViewThread extends Thread {
         private SurfaceView[] surfaces;
 
-        public MjpegViewThread(SurfaceView... surfaces) {
+        MjpegViewThread(SurfaceView... surfaces) {
             this.surfaces = surfaces;
         }
 

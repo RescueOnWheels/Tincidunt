@@ -27,15 +27,15 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
 
     private static final String TAG = "StreamActivity";
 
+    private static MjpegPlayer player;
+
     private final float[] mEulerAngles = new float[3];
+
     private float[] mInitEulerAngles = new float[3];
 
     private CardboardOverlayView mOverlayView;
 
-    private static MjpegPlayer mp;
-
     private int i = 0;
-
 
     private String baseUrl = "http://";
 
@@ -43,11 +43,6 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
 
     private boolean tracking = false;
 
-    /**
-     * Sets the view to our CardboardView and initializes the transformation matrices we will use
-     * to render our scene.
-     * //@param savedInstanceState
-     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +65,7 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
 
     private void startPlayer() {
         String URL = baseUrl + ":8000/stream/video.mjpeg";
-        mp = new MjpegPlayer(mOverlayView);
+        player = new MjpegPlayer(mOverlayView);
         (new DoRead()).execute(URL);
     }
 
@@ -166,11 +161,12 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
             return MjpegInputStream.read(params[0]);
         }
 
-        protected void onPostExecute(MjpegInputStream result) {
+        protected void onPostExecute(MjpegInputStream result) throws NullPointerException {
             if (result == null) {
-                throw new RuntimeException("stream is null!!!");
+                throw new NullPointerException("No stream was found on the given address.");
             }
-            mp.setSource(result);
+
+            player.setSource(result);
             Log.i(TAG, "running mjpeg input stream");
         }
     }

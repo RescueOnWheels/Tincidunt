@@ -10,9 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="@string/default_url"
-        android:inputType="text"
         android:importantForAutofill="no"
+        android:inputType="text"
+        android:text="@string/default_url"
         tools:targetApi="o" />
 
     <Button

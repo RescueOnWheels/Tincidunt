@@ -21,17 +21,17 @@ import java.util.Objects;
 
 import javax.microedition.khronos.egl.EGLConfig;
 
+import static com.RescueOnWheels.Tincidunt.R.*;
+import static com.RescueOnWheels.Tincidunt.R.id.*;
+
 /**
  * A Cardboard application that streams video from a RPi and sends pitch & yaw to the RPi.
  */
 public class StreamActivity extends CardboardActivity implements CardboardView.StereoRenderer, View.OnTouchListener {
 
     private static final String TAG = "StreamActivity";
-
-    private MjpegPlayer player;
-
     private final float[] mEulerAngles = new float[3];
-
+    private MjpegPlayer player;
     private CardboardOverlayView mOverlayView;
 
     private int i = 0;
@@ -40,26 +40,24 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
 
     private WaitingRequestQueue mQueue;
 
-    private boolean tracking = true;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.common_ui);
-        CardboardView cardboardView = findViewById(R.id.cardboard_view);
+        setContentView(layout.common_ui);
+        CardboardView cardboardView = findViewById(cardboard_view);
         cardboardView.setRenderer(this);
         setCardboardView(cardboardView);
         cardboardView.setOnTouchListener(this);
 
         Intent intent = getIntent();
         baseUrl += Objects.requireNonNull(intent.getExtras()).get("ip");
-        mOverlayView = findViewById(R.id.overlay);
+        mOverlayView = findViewById(overlay);
         mOverlayView.show3DToast();
         startPlayer();
 
         try {
-            mQueue = new WaitingRequestQueue(this, baseUrl + ":3000");
+            mQueue = new WaitingRequestQueue(baseUrl + ":3000");
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -132,21 +130,10 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_UP) {
-            if (!tracking) {
-                Log.i(TAG, "starting tracking");
-                tracking = true;
-                mOverlayView.fade3DToast();
-                mQueue.start();
-            } else {
-                Log.i(TAG, "stopping tracking");
-                tracking = false;
-                mOverlayView.show3DToast();
-                mQueue.stopAndRecenter();
-            }
-        }
-        return true;
+        // No need to implement this function.
+        return false;
     }
+
 
     private class DoRead extends AsyncTask<String, Void, MjpegInputStream> {
 

@@ -11,14 +11,12 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class CardboardOverlayView extends LinearLayout {
     private final CardboardOverlayEyeView mLeftView;
     private final CardboardOverlayEyeView mRightView;
-    private final AlphaAnimation mTextFadeAnimation;
 
     public CardboardOverlayView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -41,22 +39,12 @@ public class CardboardOverlayView extends LinearLayout {
         setColor(Color.rgb(150, 255, 180));
         setVisibility(View.VISIBLE);
 
-        mTextFadeAnimation = new AlphaAnimation(1.0f, 0.0f);
+        AlphaAnimation mTextFadeAnimation = new AlphaAnimation(1.0f, 0.0f);
         mTextFadeAnimation.setDuration(2500);
     }
 
     public void show3DToast() {
         setTextAlpha(1f);
-    }
-
-    public void fade3DToast() {
-        mTextFadeAnimation.setAnimationListener(new EndAnimationListener() {
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                setTextAlpha(0f);
-            }
-        });
-        startAnimation(mTextFadeAnimation);
     }
 
     private void setDepthOffset() {
@@ -83,16 +71,6 @@ public class CardboardOverlayView extends LinearLayout {
         mLeftView.imageView.getHolder().addCallback(cb);
         mRightView.imageView.getHolder().addCallback(cb);
 
-    }
-
-    private abstract class EndAnimationListener implements Animation.AnimationListener {
-        @Override
-        public void onAnimationRepeat(Animation animation) {
-        }
-
-        @Override
-        public void onAnimationStart(Animation animation) {
-        }
     }
 
     /**

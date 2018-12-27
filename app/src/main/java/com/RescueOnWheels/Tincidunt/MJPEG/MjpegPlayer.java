@@ -14,10 +14,9 @@ import com.RescueOnWheels.Tincidunt.CardboardOverlayView;
 import java.io.IOException;
 
 public class MjpegPlayer implements SurfaceHolder.Callback {
+    private final static Object lock = new Object();
     private MjpegViewThread thread;
-
     private MjpegInputStream mIn = null;
-
     private boolean mRun = false;
     private boolean surface1Done;
     private boolean surface2Done;
@@ -69,8 +68,6 @@ public class MjpegPlayer implements SurfaceHolder.Callback {
         startPlayback();
     }
 
-    private final static Object lock = new Object();
-
     private class MjpegViewThread extends Thread {
         private final SurfaceView[] surfaces;
 
@@ -94,10 +91,10 @@ public class MjpegPlayer implements SurfaceHolder.Callback {
                     for (final SurfaceView surfaceView : surfaces) {
                         SurfaceHolder surface = surfaceView.getHolder();
                         synchronized (lock) {
-                            if(!mRun) continue;
+                            if (!mRun) continue;
 
                             Canvas canvas = surface.lockCanvas();
-                            if(canvas == null) continue;
+                            if (canvas == null) continue;
 
                             canvas.drawColor(Color.BLACK);
                             canvas.drawBitmap(scaled, 0, 0, p);

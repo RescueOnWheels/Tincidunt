@@ -16,6 +16,7 @@ import com.google.vrtoolkit.cardboard.EyeTransform;
 import com.google.vrtoolkit.cardboard.HeadTransform;
 import com.google.vrtoolkit.cardboard.Viewport;
 
+import java.net.URISyntaxException;
 import java.util.Objects;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -31,8 +32,6 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
 
     private final float[] mEulerAngles = new float[3];
 
-    private float[] mInitEulerAngles = new float[3];
-
     private CardboardOverlayView mOverlayView;
 
     private int i = 0;
@@ -41,7 +40,7 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
 
     private WaitingRequestQueue mQueue;
 
-    private boolean tracking = false;
+    private boolean tracking = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,7 +58,11 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
         mOverlayView.show3DToast();
         startPlayer();
 
-        mQueue = new WaitingRequestQueue(this, baseUrl + ":8080/move");
+        try {
+            mQueue = new WaitingRequestQueue(this, baseUrl + ":3000");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
         mQueue.addRequest(0f, 0f);
     }
 
@@ -100,29 +103,21 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
     public void onNewFrame(HeadTransform headTransform) {
         headTransform.getEulerAngles(mEulerAngles, 0);
 
-        int x = (int)Math.round(mEulerAngles[0] / (Math.PI / 2) * 100);
-        x = Math.min(x, 100);
-        x = Math.max(x, -100);
-        int y = (int)Math.round(-mEulerAngles[1] / (Math.PI / 2) * 100);
-        y = Math.min(y, 100);
-        y = Math.max(y, -100);
+        int x = (int) Math.round(mEulerAngles[0] / (Math.PI / 2) * 10);
+        x = Math.min(x, 10);
+        x = Math.max(x, -10);
+        x *= 10;
+        int y = (int) Math.round(-mEulerAngles[1] / (Math.PI / 2) * 10);
+        y = Math.min(y, 10);
+        y = Math.max(y, -10);
+        y *= 10;
 
         if (i % 10 == 0) {
             Log.i(TAG, "Axis: " + x + " " + y);
         }
 
-        if (tracking) {
-            shift();
-            mQueue.addRequest(x, y);
-        }
-
+        mQueue.addRequest(x, y);
         i++;
-    }
-
-    private void shift() {
-        for (int i = 0; i < mEulerAngles.length; i++) {
-            mEulerAngles[i] -= mInitEulerAngles[i];
-        }
     }
 
     @Override
@@ -140,7 +135,6 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
         if (event.getAction() == MotionEvent.ACTION_UP) {
             if (!tracking) {
                 Log.i(TAG, "starting tracking");
-                mInitEulerAngles = mEulerAngles.clone();
                 tracking = true;
                 mOverlayView.fade3DToast();
                 mQueue.start();

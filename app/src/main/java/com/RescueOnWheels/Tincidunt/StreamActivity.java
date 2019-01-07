@@ -36,9 +36,12 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
 
     private int i = 0;
 
+    private int servoStep = 5;
+
     private String baseUrl = "http://";
 
     private WaitingRequestQueue mQueue;
+    private float[] mOffsetEulerAngles = {0.0f, 0.0f, 0.0f};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,8 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
         cardboardView.setRenderer(this);
         setCardboardView(cardboardView);
         cardboardView.setOnTouchListener(this);
+
+        shift();
 
         Intent intent = getIntent();
         baseUrl += Objects.requireNonNull(intent.getExtras()).get("ip");
@@ -65,7 +70,7 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
     }
 
     private void startPlayer() {
-        String URL = baseUrl + ":8000/stream/video.mjpeg";
+        String URL = baseUrl + ":8080/stream/video.mjpeg";
         player = new MjpegPlayer(mOverlayView);
         (new DoRead()).execute(URL);
     }
@@ -100,15 +105,15 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
     @Override
     public void onNewFrame(HeadTransform headTransform) {
         headTransform.getEulerAngles(mEulerAngles, 0);
-
-        int x = (int) Math.round(mEulerAngles[0] / (Math.PI / 2) * 10);
-        x = Math.min(x, 10);
-        x = Math.max(x, -10);
-        x *= 10;
-        int y = (int) Math.round(-mEulerAngles[1] / (Math.PI / 2) * 10);
-        y = Math.min(y, 10);
-        y = Math.max(y, -10);
-        y *= 10;
+        shift();
+        int x = (int) Math.round(mEulerAngles[0] / (Math.PI / 2) * servoStep);
+        x = Math.min(x, servoStep);
+        x = Math.max(x, -servoStep);
+        x *= 100/servoStep;
+        int y = (int) Math.round(-mEulerAngles[1] / (Math.PI / 2) * servoStep);
+        y = Math.min(y, servoStep);
+        y = Math.max(y, -servoStep);
+        y *= 100/servoStep;
 
         if (i % 10 == 0) {
             Log.i(TAG, "Axis: " + x + " " + y);
@@ -116,6 +121,11 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
 
         mQueue.addRequest(x, y);
         i++;
+    }
+    private void shift(){
+        for(int i = 0;i <mEulerAngles.length; i++){
+            mEulerAngles[i] -= mOffsetEulerAngles[i];
+        }
     }
 
     @Override
@@ -130,7 +140,7 @@ public class StreamActivity extends CardboardActivity implements CardboardView.S
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        // No need to implement this function.
+        mOffsetEulerAngles = mEulerAngles.clone();
         return false;
     }
 

@@ -22,7 +22,7 @@ public class WaitingRequestQueue {
             return;
         }
 
-        mSocket.emit("headset position", String.format("{\"horizontal\":%s, \"vertical\":%s}", (double) yaw / 100, (double) pitch / 100));
+        mSocket.emit("headset position", String.format("{\"horizontal\":%s, \"vertical\":%s}", (double) yaw / -100, (double) pitch / 100));
 
         prevPitch = pitch;
         prevYaw = yaw;
